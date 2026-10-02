@@ -1,0 +1,919 @@
+/* =====================================================================
+   login.css — Unified Authentication Portal
+   Barangay Pahina's Online Reservation of Brgy. Certificate
+   Design: Deep Blue Government Branding + Warm Gold / Yellow Accents
+   ===================================================================== */
+
+/* ── Design Tokens & Custom Properties ───────────────────────────── */
+:root {
+    /* Primary Government Blues */
+    --lp-blue-darkest : #071e47;
+    --lp-blue-dark    : #0B3D91;
+    --lp-blue-primary : #1565C0;
+    --lp-blue-bright  : #1976D2;
+    --lp-blue-light   : #EAF3FF;
+    --lp-blue-muted   : #BBDEFB;
+
+    /* Warm Gold / Amber Accents */
+    --lp-gold         : #FFC107;
+    --lp-gold-deep    : #F9A825;
+    --lp-gold-glow    : rgba(255, 193, 7, 0.22);
+
+    /* Surfaces & Neutrals */
+    --lp-white        : #FFFFFF;
+    --lp-text-dark    : #151E2E;
+    --lp-text-mid     : #374151;
+    --lp-text-muted   : #64748B;
+    --lp-border       : #CBD5E1;
+    --lp-border-light : #E2E8F0;
+    --lp-surface      : #F8FAFC;
+
+    /* Status Colors */
+    --lp-error-bg     : #FEF2F2;
+    --lp-error-border : #FECACA;
+    --lp-error-text   : #991B1B;
+    --lp-success-bg   : #F0FDF4;
+    --lp-success-bdr  : #BBF7D0;
+    --lp-success-text : #166534;
+
+    /* Shapes & Shadows */
+    --lp-radius-sm    : 6px;
+    --lp-radius-md    : 10px;
+    --lp-radius-lg    : 18px;
+    --lp-shadow-sm    : 0 1px 3px rgba(0, 0, 0, 0.08);
+    --lp-shadow-md    : 0 4px 16px rgba(11, 61, 145, 0.12);
+    --lp-shadow-lg    : 0 12px 36px rgba(11, 61, 145, 0.18);
+    --lp-transition   : 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Reset & Baseline ────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body.login-body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.login-body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--lp-blue-darkest);
+    color: var(--lp-text-dark);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+}
+
+/* ── Main Split Container (Uses 100% width to avoid scrollbar overflow) ── */
+.authentication-layout,
+.authentication-page {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+/* =====================================================================
+   1. LEFT PANEL — Fixed Blue Branding Panel (Permanent, Never changes)
+   ===================================================================== */
+.branding-panel {
+    position: relative;
+    flex: 0 0 46%;
+    width: 46%;
+    min-width: 0;
+    height: 100vh;
+    max-height: 100vh;
+    background: linear-gradient(145deg,
+        var(--lp-blue-darkest) 0%,
+        var(--lp-blue-dark)    42%,
+        var(--lp-blue-primary) 78%,
+        var(--lp-blue-bright)  100%
+    );
+    color: var(--lp-white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(24px, 3.5vh, 42px) clamp(28px, 3.8vw, 48px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    z-index: 1;
+}
+
+.branding-panel::-webkit-scrollbar {
+    width: 5px;
+}
+.branding-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+/* ── Decorative Background Shapes (Layered safely behind text) ─── */
+.bp-deco {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+.bp-deco-1 {
+    width: 460px;
+    height: 460px;
+    top: -140px;
+    right: -140px;
+}
+.bp-deco-2 {
+    width: 280px;
+    height: 280px;
+    bottom: 40px;
+    left: -90px;
+}
+.bp-deco-arc {
+    width: 100%;
+    left: 0;
+    bottom: 50px;
+    opacity: 0.5;
+}
+.bp-deco-dots {
+    width: 150px;
+    height: 150px;
+    bottom: 70px;
+    right: 20px;
+    opacity: 0.22;
+}
+
+/* ── Main Branding Inner Stack (Natural top-down flow, no clipping) ── */
+.bp-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2.2vh, 26px);
+}
+
+/* ── Two Official Logo Placeholders ─────────────────────────────── */
+.bp-logos {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.bp-logo-box {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10);
+    border: 2px dashed rgba(255, 255, 255, 0.32);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: border-color var(--lp-transition), background var(--lp-transition);
+}
+.bp-logo-box:hover {
+    border-color: var(--lp-gold);
+    background: rgba(255, 193, 7, 0.12);
+}
+
+.bp-logo-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+    z-index: 2;
+    background: var(--lp-white);
+}
+.bp-logo-img.is-hidden {
+    display: none !important;
+}
+
+.bp-logo-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-align: center;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+}
+.bp-logo-icon {
+    font-size: 1.45rem;
+    line-height: 1;
+}
+.bp-logo-tag {
+    font-size: 0.50rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.25;
+}
+
+.bp-logo-divider {
+    width: 1px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.22);
+    flex-shrink: 0;
+}
+
+/* ── Brand Content ──────────────────────────────────────────────── */
+.bp-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.bp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    border-radius: 999px;
+    padding: 4px 12px 4px 9px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.90);
+    margin-bottom: clamp(10px, 1.6vh, 16px);
+    width: fit-content;
+    text-transform: uppercase;
+}
+.bp-badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--lp-gold);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px var(--lp-gold-glow);
+    animation: bp-pulse 2.2s infinite;
+}
+@keyframes bp-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px var(--lp-gold-glow); }
+    50%      { box-shadow: 0 0 0 6px rgba(255, 193, 7, 0.08); }
+}
+
+/* ── System Title (Intelligently structured across 3 lines) ─────── */
+.bp-title {
+    font-size: clamp(1.65rem, 2.5vw, 2.25rem);
+    font-weight: 800;
+    line-height: 1.22;
+    color: var(--lp-white);
+    margin: 0 0 clamp(10px, 1.5vh, 16px);
+    letter-spacing: -0.015em;
+}
+.bp-title-highlight {
+    color: var(--lp-gold);
+    display: inline-block;
+}
+.bp-title-sub {
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 700;
+}
+
+.bp-description {
+    font-size: clamp(0.86rem, 1.1vw, 0.96rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 420px;
+    margin: 0 0 clamp(14px, 2vh, 22px);
+}
+
+/* ── Service Highlights ─────────────────────────────────────────── */
+.bp-features {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1.2vh, 12px);
+}
+.bp-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: clamp(0.82rem, 1vw, 0.88rem);
+    color: rgba(255, 255, 255, 0.90);
+    font-weight: 500;
+}
+.bp-feature-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: background var(--lp-transition), border-color var(--lp-transition);
+}
+.bp-feature-item:hover .bp-feature-icon {
+    background: rgba(255, 193, 7, 0.20);
+    border-color: var(--lp-gold);
+}
+
+/* ── Bottom Community Tagline ───────────────────────────────────── */
+.bp-footer-message {
+    position: relative;
+    z-index: 2;
+    margin: clamp(14px, 2vh, 20px) 0 0;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+}
+
+
+/* =====================================================================
+   2. RIGHT PANEL — Switchable Authentication Area
+   ===================================================================== */
+.auth-panel {
+    flex: 1 1 54%;
+    width: 54%;
+    min-width: 0;
+    height: 100vh;
+    max-height: 100vh;
+    background: var(--lp-white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: clamp(20px, 3vh, 36px) clamp(24px, 3.5vw, 44px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+/* Slim scrollbar for authentication panel */
+.auth-panel::-webkit-scrollbar {
+    width: 6px;
+}
+.auth-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+.auth-panel::-webkit-scrollbar-thumb {
+    background: rgba(11, 61, 145, 0.18);
+    border-radius: 4px;
+}
+.auth-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(11, 61, 145, 0.32);
+}
+
+/* Mobile Header (hidden on desktop) */
+.bp-mobile-header {
+    display: none;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.bp-mobile-logo-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+}
+.bp-mobile-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--lp-blue-dark);
+    margin: 0;
+}
+
+/* ── Form Wrapper (Centered safely without top clipping) ────────── */
+.auth-forms-wrapper {
+    width: 100%;
+    max-width: 500px;
+    margin-block: auto; /* Vertically centered when fits; collapses to 0 if tall */
+    padding: 6px 0;
+    position: relative;
+}
+
+/* Desktop site pill */
+.auth-desktop-brand {
+    margin-bottom: 8px;
+}
+.auth-site-pill {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lp-blue-primary);
+    background: var(--lp-blue-light);
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+
+/* Headings */
+.auth-heading {
+    font-size: clamp(1.45rem, 2.2vw, 1.85rem);
+    font-weight: 800;
+    color: var(--lp-text-dark);
+    margin: 0 0 4px;
+    letter-spacing: -0.015em;
+}
+.auth-subheading {
+    font-size: 0.88rem;
+    color: var(--lp-text-muted);
+    margin: 0 0 20px;
+    line-height: 1.5;
+}
+
+/* ── Alerts ─────────────────────────────────────────────────────── */
+.auth-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: var(--lp-radius-sm);
+    font-size: 0.86rem;
+    font-weight: 500;
+    line-height: 1.45;
+    margin-bottom: 16px;
+}
+.auth-alert-icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+    margin-top: 1px;
+}
+.auth-alert-error {
+    background: var(--lp-error-bg);
+    border: 1px solid var(--lp-error-border);
+    color: var(--lp-error-text);
+}
+.auth-alert-success {
+    background: var(--lp-success-bg);
+    border: 1px solid var(--lp-success-bdr);
+    color: var(--lp-success-text);
+}
+
+/* ── Form Controls & Shared Inputs ──────────────────────────────── */
+.auth-field {
+    margin-bottom: 10px;
+}
+.auth-field label {
+    display: block;
+    font-size: 0.80rem;
+    font-weight: 600;
+    color: var(--lp-text-dark);
+    margin-bottom: 4px;
+    letter-spacing: 0.01em;
+}
+.auth-req {
+    color: var(--lp-blue-primary);
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+/* Input with Left Icon (Login Form) */
+.auth-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.auth-input-icon {
+    position: absolute;
+    left: 13px;
+    color: var(--lp-text-muted);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    z-index: 1;
+    transition: color var(--lp-transition);
+}
+.auth-input-wrap:focus-within .auth-input-icon {
+    color: var(--lp-blue-primary);
+}
+.auth-input-wrap input {
+    width: 100%;
+    padding: 11px 42px 11px 42px;
+    border: 1.5px solid var(--lp-border);
+    border-radius: var(--lp-radius-sm);
+    font-size: 0.92rem;
+    color: var(--lp-text-dark);
+    background: var(--lp-surface);
+    transition: border-color var(--lp-transition), box-shadow var(--lp-transition), background var(--lp-transition);
+    font-family: inherit;
+    outline: none;
+}
+.auth-input-wrap input:focus {
+    border-color: var(--lp-blue-primary);
+    background: var(--lp-white);
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.12);
+}
+
+/* Clean Input (Register Form & General) */
+.auth-input-clean {
+    width: 100%;
+    height: 38px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--lp-border);
+    border-radius: var(--lp-radius-sm);
+    font-size: 0.86rem;
+    color: var(--lp-text-dark);
+    background: var(--lp-surface);
+    transition: border-color var(--lp-transition), box-shadow var(--lp-transition), background var(--lp-transition);
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+}
+.auth-input-clean:focus {
+    border-color: var(--lp-blue-primary);
+    background: var(--lp-white);
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.12);
+}
+.auth-input-clean::placeholder {
+    color: #94A3B8;
+}
+
+/* Password with Toggle (Register Form) */
+.auth-input-with-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.auth-input-with-toggle .auth-input-clean {
+    padding-right: 38px;
+}
+.auth-input-with-toggle .auth-pw-toggle {
+    position: absolute;
+    right: 8px;
+}
+
+/* Password Toggle Button */
+.auth-pw-toggle {
+    position: absolute;
+    right: 11px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--lp-text-muted);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: color var(--lp-transition), background var(--lp-transition);
+    outline: none;
+}
+.auth-pw-toggle:hover {
+    color: var(--lp-blue-primary);
+    background: var(--lp-blue-light);
+}
+
+/* ── Action Buttons ─────────────────────────────────────────────── */
+.auth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    border: none;
+    border-radius: var(--lp-radius-sm);
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--lp-transition), box-shadow var(--lp-transition), filter var(--lp-transition);
+}
+
+/* Login Button: Deep Blue Theme */
+.auth-btn-login {
+    padding: 12px 18px;
+    font-size: 0.96rem;
+    background: linear-gradient(135deg, var(--lp-blue-dark) 0%, var(--lp-blue-primary) 65%, var(--lp-blue-bright) 100%);
+    color: var(--lp-white);
+    box-shadow: 0 4px 14px rgba(21, 101, 192, 0.28);
+}
+.auth-btn-login:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(21, 101, 192, 0.38);
+    filter: brightness(1.05);
+}
+.auth-btn-login:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(21, 101, 192, 0.22);
+}
+
+/* Register Button: Warm Gold Theme */
+.auth-btn-register {
+    padding: 11px 18px;
+    font-size: 0.94rem;
+    background: linear-gradient(135deg, #B45309 0%, var(--lp-gold-deep) 48%, var(--lp-gold) 100%);
+    color: #1A1100;
+    box-shadow: 0 4px 14px rgba(249, 168, 37, 0.35);
+}
+.auth-btn-register:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(249, 168, 37, 0.46);
+    filter: brightness(1.04);
+}
+.auth-btn-register:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(249, 168, 37, 0.24);
+}
+
+/* ── Switch Links (Login ↔ Register) ────────────────────────────── */
+.auth-switch-text {
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--lp-text-muted);
+    margin: 16px 0 0;
+}
+.auth-link-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--lp-blue-primary);
+    font-weight: 700;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    margin-left: 4px;
+    border-bottom: 1.5px solid transparent;
+    transition: color var(--lp-transition), border-color var(--lp-transition);
+}
+.auth-link-btn:hover {
+    color: var(--lp-blue-dark);
+    border-bottom-color: var(--lp-blue-dark);
+}
+
+/* ── Registration Form Grid (Compact, Fits Cleanly) ─────────────── */
+.auth-grid-row {
+    display: grid;
+    gap: 10px;
+}
+.auth-cols-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+/* ── Demo Accounts Collapsible Box ──────────────────────────────── */
+.lf-demo-box {
+    margin-top: 22px;
+    border: 1px solid var(--lp-border-light);
+    border-radius: var(--lp-radius-sm);
+    background: var(--lp-surface);
+    overflow: hidden;
+}
+.lf-demo-summary {
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 0.80rem;
+    font-weight: 600;
+    color: var(--lp-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    list-style: none;
+    user-select: none;
+    transition: color var(--lp-transition), background var(--lp-transition);
+}
+.lf-demo-summary:hover {
+    color: var(--lp-blue-primary);
+    background: var(--lp-blue-light);
+}
+.lf-demo-summary::-webkit-details-marker {
+    display: none;
+}
+.lf-demo-summary::after {
+    content: '›';
+    margin-left: auto;
+    font-size: 1rem;
+    transition: transform var(--lp-transition);
+}
+details[open] .lf-demo-summary::after {
+    transform: rotate(90deg);
+}
+
+.lf-demo-content {
+    padding: 10px 12px 12px;
+    border-top: 1px solid var(--lp-border-light);
+}
+.lf-demo-note {
+    font-size: 0.78rem;
+    color: var(--lp-text-muted);
+    margin: 0 0 8px;
+}
+.lf-demo-note code {
+    background: var(--lp-blue-light);
+    color: var(--lp-blue-dark);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.80rem;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.lf-demo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+.lf-demo-table th,
+.lf-demo-table td {
+    padding: 5px 6px;
+    text-align: left;
+    border-bottom: 1px solid var(--lp-border-light);
+}
+.lf-demo-table th {
+    color: var(--lp-text-muted);
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+}
+.lf-demo-table tr:last-child td {
+    border-bottom: none;
+}
+
+.lf-role-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.lf-role-admin    { background: #E3F2FD; color: var(--lp-blue-dark); }
+.lf-role-staff    { background: #FFF3E0; color: #E65100; }
+.lf-role-resident { background: #E8F5E9; color: #1B5E20; }
+
+
+/* =====================================================================
+   3. LOGIN / REGISTER SWITCHING BEHAVIOR
+   Single area — smooth transition without page reload or blue shift
+   ===================================================================== */
+.auth-form {
+    width: 100%;
+}
+
+/* Default state: Login is visible, Register is hidden */
+.auth-form.login-form {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+.auth-form.register-form {
+    display: none;
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+/* When Register view is active */
+.authentication-layout.register-active .auth-form.login-form,
+.authentication-page.register-active .auth-form.login-form {
+    display: none;
+}
+.authentication-layout.register-active .auth-form.register-form,
+.authentication-page.register-active .auth-form.register-form {
+    display: block;
+    animation: authSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* When switching back to Login view */
+.authentication-layout.login-transition .auth-form.login-form,
+.authentication-page.login-transition .auth-form.login-form {
+    display: block;
+    animation: authSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes authSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =====================================================================
+   4. RESPONSIVE DESIGN
+   ===================================================================== */
+
+/* ── Tablet (769px to 1024px) ────────────────────────────────────── */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .branding-panel {
+        flex: 0 0 44%;
+        width: 44%;
+        padding: 28px 24px;
+    }
+    .auth-panel {
+        flex: 1 1 56%;
+        width: 56%;
+        padding: 24px 20px;
+    }
+    .bp-title {
+        font-size: 1.7rem;
+    }
+}
+
+/* ── Mobile / Small Screens (≤768px): Stack Vertically ───────────── */
+@media (max-width: 768px) {
+    body.login-body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+    }
+
+    .authentication-layout,
+    .authentication-page {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        max-height: none;
+        overflow: visible;
+    }
+
+    /* Left Branding becomes top header banner */
+    .branding-panel {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        max-height: none;
+        padding: 24px 20px 20px;
+        overflow: visible;
+    }
+
+    .bp-logos {
+        gap: 12px;
+    }
+    .bp-logo-box {
+        width: 58px;
+        height: 58px;
+    }
+    .bp-title {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+    }
+    .bp-description {
+        font-size: 0.84rem;
+        margin-bottom: 0;
+    }
+    .bp-features,
+    .bp-footer-message,
+    .bp-deco-dots {
+        display: none; /* Keep top banner clean and compact on phones */
+    }
+
+    /* Right Auth Area stacks below */
+    .auth-panel {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        max-height: none;
+        padding: 28px 18px 48px;
+        overflow: visible;
+    }
+
+    .auth-forms-wrapper {
+        margin: 0 auto;
+    }
+
+    .auth-cols-2 {
+        grid-template-columns: 1fr; /* Stack form inputs into single column on mobile */
+    }
+
+    .auth-input-clean,
+    .auth-input-wrap input {
+        font-size: 1rem; /* Prevents unwanted auto-zoom in mobile Safari/Chrome */
+        height: 42px;
+    }
+}
+
+/* ── Extra Small Screens (≤480px) ────────────────────────────────── */
+@media (max-width: 480px) {
+    .branding-panel {
+        padding: 20px 16px 18px;
+    }
+    .bp-logo-box {
+        width: 52px;
+        height: 52px;
+    }
+    .bp-title {
+        font-size: 1.25rem;
+    }
+    .auth-panel {
+        padding: 22px 14px 40px;
+    }
+    .auth-heading {
+        font-size: 1.4rem;
+    }
+}
