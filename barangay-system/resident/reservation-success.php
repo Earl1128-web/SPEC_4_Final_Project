@@ -12,7 +12,7 @@ $stmt->execute([$id, $resident['id']]);
 $reservation = $stmt->fetch();
 
 if (!$reservation) {
-    header('Location: /barangay-system/resident/dashboard.php');
+    header('Location: ' . appUrl('/resident/dashboard.php'));
     exit;
 }
 
@@ -32,7 +32,7 @@ require_once __DIR__ . '/../includes/header.php';
         <tr><th>Status</th><td><?= statusBadge($reservation['status']) ?></td></tr>
     </table>
     <div class="btn-group" style="margin-top:16px;">
-        <a class="btn" href="/barangay-system/resident/dashboard.php">Back to Dashboard</a>
+        <a class="btn" href="<?= h(appUrl('/resident/dashboard.php')) ?>">Back to Dashboard</a>
     </div>
 </div>
 

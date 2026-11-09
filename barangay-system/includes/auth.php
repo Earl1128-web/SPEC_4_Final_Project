@@ -7,7 +7,36 @@
  * -----------------------------------------------------------------
  */
 
+function appBasePath(): string
+{
+    $scriptName = parse_url($_SERVER['SCRIPT_NAME'] ?? '/', PHP_URL_PATH) ?: '/';
+    $scriptDirectory = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+
+    if (in_array(basename($scriptDirectory), ['admin', 'resident', 'staff'], true)) {
+        $scriptDirectory = dirname($scriptDirectory);
+    }
+
+    return $scriptDirectory === '/' ? '' : $scriptDirectory;
+}
+
+/** Build an application URL that works from the project root or a role folder. */
+function appUrl(string $path = ''): string
+{
+    return appBasePath() . '/' . ltrim($path, '/');
+}
+
 if (session_status() === PHP_SESSION_NONE) {
+    $httpsEnabled = !empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off';
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
+    ini_set('session.use_trans_sid', '0');
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => appBasePath() . '/',
+        'secure' => $httpsEnabled,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
     session_start();
 }
 
@@ -33,7 +62,7 @@ function currentRole(): ?string
 function requireLogin(): void
 {
     if (!isLoggedIn()) {
-        header('Location: /barangay-system/login.php');
+        header('Location: ' . appUrl('/login.php'));
         exit;
     }
 }

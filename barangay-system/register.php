@@ -9,5 +9,7 @@
  *
  * Do NOT delete this file; it is a safe compatibility shim.
  */
-header('Location: /barangay-system/login.php?panel=register');
+require_once __DIR__ . '/includes/auth.php';
+
+header('Location: ' . appUrl('/login.php?panel=register'));
 exit;

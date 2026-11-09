@@ -50,7 +50,7 @@ require_once __DIR__ . '/../includes/header.php';
             Resident ID: <?= (int)$r['id'] ?><br>
             Address: <?= h($r['address']) ?><br>
             Contact: <?= h($r['contact_number']) ?><br>
-            <a class="btn btn-sm" style="margin-top:8px;" href="/barangay-system/staff/resident-view.php?id=<?= (int)$r['id'] ?>">View Profile</a>
+            <a class="btn btn-sm" style="margin-top:8px;" href="<?= h(appUrl('/staff/resident-view.php?id=' . (int)$r['id'])) ?>">View Profile</a>
         </div>
     <?php endforeach; ?>
 </div>

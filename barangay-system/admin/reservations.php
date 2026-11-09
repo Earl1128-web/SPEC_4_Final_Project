@@ -61,6 +61,6 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
 </div>
 
-<p class="form-hint">To confirm, reject, or complete reservations, use the <a href="/barangay-system/staff/reservations.php">Staff Reservations</a> page.</p>
+<p class="form-hint">To confirm, reject, or complete reservations, use the <a href="<?= h(appUrl('/staff/reservations.php')) ?>">Staff Reservations</a> page.</p>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

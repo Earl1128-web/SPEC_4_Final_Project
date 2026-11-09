@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 /**
  * login.php — Public landing page & unified authentication portal.
  *
@@ -24,7 +27,7 @@ require_once __DIR__ . '/includes/functions.php';
 
 /* ── Already logged in → go straight to dashboard ────────────────── */
 if (isLoggedIn()) {
-    header('Location: /barangay-system/' . currentRole() . '/dashboard.php');
+    header('Location: ' . appUrl('/' . currentRole() . '/dashboard.php'));
     exit;
 }
 
@@ -138,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pdo->commit();
 
                 // Redirect to login panel with a success flag (no session flash needed).
-                header('Location: /barangay-system/login.php?registered=1');
+                header('Location: ' . appUrl('/login.php?registered=1'));
                 exit;
 
             } catch (Exception $e) {
@@ -150,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* ─────────────────────────────────────────────────────────────────
        LOGIN
-       Original login logic — completely unchanged.
+    Email or username login with generic failures and throttling.
     ───────────────────────────────────────────────────────────────── */
     } else {
         $emailValue = trim($_POST['email'] ?? '');
@@ -159,37 +162,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($emailValue === '' || $password === '') {
             $loginErrors[] = 'Please enter both email/username and password.';
         } else {
-            // Allow login using either email or username
-            $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? OR username = ? LIMIT 1');
-            $stmt->execute([$emailValue, $emailValue]);
-            $user = $stmt->fetch();
+            $ipHash = hash('sha256', $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+            $pdo->exec('DELETE FROM login_attempts WHERE attempted_at < (NOW() - INTERVAL 1 DAY)');
+            $attemptStmt = $pdo->prepare(
+                'SELECT COUNT(*) FROM login_attempts
+                 WHERE ip_hash = ? AND attempted_at >= (NOW() - INTERVAL 15 MINUTE)'
+            );
+            $attemptStmt->execute([$ipHash]);
 
-            if (!$user || !password_verify($password, $user['password'])) {
-                $loginErrors[] = 'Invalid email/username or password.';
-            } elseif ($user['status'] !== 'active') {
-                $loginErrors[] = 'This account has been disabled. Please contact the barangay office.';
+            if ((int)$attemptStmt->fetchColumn() >= 5) {
+                $loginErrors[] = 'Too many sign-in attempts. Please wait 15 minutes before trying again.';
             } else {
-                // Regenerate session ID to prevent session fixation
-                session_regenerate_id(true);
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['role']    = $user['role'];
+                $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? OR username = ? LIMIT 1');
+                $stmt->execute([$emailValue, $emailValue]);
+                $user = $stmt->fetch();
 
-                if ($user['role'] === 'resident') {
-                    $resident = getResidentByUserId($pdo, $user['id']);
-                    $_SESSION['display_name'] = $resident
-                        ? $resident['first_name'] . ' ' . $resident['last_name']
-                        : $user['username'];
+                if (!$user || !password_verify($password, $user['password']) || $user['status'] !== 'active') {
+                    $pdo->prepare('INSERT INTO login_attempts (ip_hash) VALUES (?)')->execute([$ipHash]);
+                    $loginErrors[] = 'Invalid email/username or password.';
                 } else {
-                    $staff = getStaffByUserId($pdo, $user['id']);
-                    $_SESSION['display_name'] = $staff
-                        ? $staff['first_name'] . ' ' . $staff['last_name']
-                        : $user['username'];
+                    $pdo->prepare('DELETE FROM login_attempts WHERE ip_hash = ?')->execute([$ipHash]);
+
+                    if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
+                        $newHash = password_hash($password, PASSWORD_DEFAULT);
+                        $pdo->prepare('UPDATE users SET password = ? WHERE id = ?')
+                            ->execute([$newHash, $user['id']]);
+                    }
+
+                    session_regenerate_id(true);
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['role']    = $user['role'];
+
+                    if ($user['role'] === 'resident') {
+                        $resident = getResidentByUserId($pdo, $user['id']);
+                        $_SESSION['display_name'] = $resident
+                            ? $resident['first_name'] . ' ' . $resident['last_name']
+                            : $user['username'];
+                    } else {
+                        $staff = getStaffByUserId($pdo, $user['id']);
+                        $_SESSION['display_name'] = $staff
+                            ? $staff['first_name'] . ' ' . $staff['last_name']
+                            : $user['username'];
+                    }
+
+                    logAction($pdo, $user['id'], 'LOGIN', 'User logged in.');
+
+                    header('Location: ' . appUrl('/' . $user['role'] . '/dashboard.php'));
+                    exit;
                 }
-
-                logAction($pdo, $user['id'], 'LOGIN', 'User logged in.');
-
-                header('Location: /barangay-system/' . $user['role'] . '/dashboard.php');
-                exit;
             }
         }
     }
@@ -205,8 +225,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/barangay-system/css/style.css?v=<?= filemtime(__DIR__ . '/css/style.css') ?>">
-    <link rel="stylesheet" href="/barangay-system/css/login.css?v=<?= filemtime(__DIR__ . '/css/login.css') ?>">
+    <link rel="stylesheet" href="<?= h(appUrl('/css/style.css?v=' . filemtime(__DIR__ . '/css/style.css'))) ?>">
+    <link rel="stylesheet" href="<?= h(appUrl('/css/login.css?v=' . filemtime(__DIR__ . '/css/login.css'))) ?>">
 </head>
 <body class="login-body">
 
@@ -241,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="bp-logos">
                 <div class="bp-logo-box" title="Place Barangay Logo at assets/images/barangay-logo.png">
                     <img
-                        src="/barangay-system/assets/images/barangay-logo.png"
+                        src="<?= h(appUrl('/assets/images/barangay-logo.png')) ?>"
                         alt="Barangay Pahina Logo"
                         class="bp-logo-img"
                         onerror="this.classList.add('is-hidden');"
@@ -256,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="bp-logo-box" title="Place City Logo at assets/images/city-logo.png">
                     <img
-                        src="/barangay-system/assets/images/city-logo.png"
+                        src="<?= h(appUrl('/assets/images/city-logo.png')) ?>"
                         alt="City / Municipality Logo"
                         class="bp-logo-img"
                         onerror="this.classList.add('is-hidden');"
@@ -358,7 +378,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endforeach; ?>
 
                 <!-- Login Form (action, method, CSRF, and inputs fully preserved) -->
-                <form method="post" action="/barangay-system/login.php" id="loginForm" novalidate>
+                <form method="post" action="<?= h(appUrl('/login.php')) ?>" id="loginForm" novalidate>
                     <?= csrfField() ?>
                     <input type="hidden" name="form" value="login">
 
@@ -467,7 +487,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endforeach; ?>
 
-                <form method="post" action="/barangay-system/login.php" id="registerForm" novalidate>
+                <form method="post" action="<?= h(appUrl('/login.php')) ?>" id="registerForm" novalidate>
                     <?= csrfField() ?>
                     <input type="hidden" name="form" value="register">
 
@@ -631,6 +651,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </div><!-- /.authentication-layout -->
 
-<script src="/barangay-system/js/script.js?v=<?= filemtime(__DIR__ . '/js/script.js') ?>"></script>
+<script src="<?= h(appUrl('/js/script.js?v=' . filemtime(__DIR__ . '/js/script.js'))) ?>"></script>
 </body>
 </html>

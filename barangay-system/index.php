@@ -14,8 +14,8 @@
 require_once __DIR__ . '/includes/auth.php';
 
 if (isLoggedIn()) {
-    header('Location: /barangay-system/' . currentRole() . '/dashboard.php');
+    header('Location: ' . appUrl('/' . currentRole() . '/dashboard.php'));
 } else {
-    header('Location: /barangay-system/login.php');
+    header('Location: ' . appUrl('/login.php'));
 }
 exit;

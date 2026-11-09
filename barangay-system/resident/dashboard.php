@@ -47,10 +47,10 @@ require_once __DIR__ . '/../includes/header.php';
 </div>
 
 <div class="btn-group">
-    <a class="btn" href="/barangay-system/resident/reservation.php">Make Reservation</a>
-    <a class="btn btn-secondary" href="/barangay-system/resident/reservations.php">View Reservations</a>
-    <a class="btn btn-secondary" href="/barangay-system/resident/certificates.php">Certificate History</a>
-    <a class="btn btn-secondary" href="/barangay-system/resident/profile.php">My Profile</a>
+    <a class="btn" href="<?= h(appUrl('/resident/reservation.php')) ?>">Make Reservation</a>
+    <a class="btn btn-secondary" href="<?= h(appUrl('/resident/reservations.php')) ?>">View Reservations</a>
+    <a class="btn btn-secondary" href="<?= h(appUrl('/resident/certificates.php')) ?>">Certificate History</a>
+    <a class="btn btn-secondary" href="<?= h(appUrl('/resident/profile.php')) ?>">My Profile</a>
 </div>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

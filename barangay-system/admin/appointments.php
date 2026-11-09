@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_slot'])) {
     }
 
     if (!$errors) {
-        header('Location: /barangay-system/admin/appointments.php');
+        header('Location: ' . appUrl('/admin/appointments.php'));
         exit;
     }
 }
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_slot_id'])) {
         $pdo->prepare('UPDATE appointment_slots SET status = ? WHERE id = ?')->execute([$newStatus, $slotId]);
         $_SESSION['flash_success'] = "Slot marked as $newStatus.";
     }
-    header('Location: /barangay-system/admin/appointments.php');
+    header('Location: ' . appUrl('/admin/appointments.php'));
     exit;
 }
 

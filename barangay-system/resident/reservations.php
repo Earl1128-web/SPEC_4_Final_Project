@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_id'])) {
     $_SESSION['flash_success'] = $stmt->rowCount() > 0
         ? 'Reservation cancelled.'
         : 'That reservation could not be cancelled.';
-    header('Location: /barangay-system/resident/reservations.php');
+    header('Location: ' . appUrl('/resident/reservations.php'));
     exit;
 }
 

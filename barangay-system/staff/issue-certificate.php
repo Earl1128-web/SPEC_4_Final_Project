@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->commit();
 
             $_SESSION['flash_success'] = "Certificate $certRef issued successfully.";
-            header('Location: /barangay-system/staff/reservations.php');
+            header('Location: ' . appUrl('/staff/reservations.php'));
             exit;
         } catch (Exception $e) {
             $pdo->rollBack();

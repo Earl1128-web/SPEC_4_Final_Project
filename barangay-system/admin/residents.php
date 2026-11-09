@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_user_id'])) {
         logAction($pdo, $_SESSION['user_id'], 'TOGGLE_RESIDENT_STATUS', "User #$userId set to $newStatus");
         $_SESSION['flash_success'] = "Account status updated to $newStatus.";
     }
-    header('Location: /barangay-system/admin/residents.php');
+    header('Location: ' . appUrl('/admin/residents.php'));
     exit;
 }
 
@@ -61,7 +61,7 @@ require_once __DIR__ . '/../includes/header.php';
             <?php endif; ?>
             <?php foreach ($residents as $r): ?>
                 <tr>
-                    <td><a href="/barangay-system/staff/resident-view.php?id=<?= (int)$r['id'] ?>"><?= h($r['first_name'] . ' ' . $r['last_name']) ?></a></td>
+                    <td><a href="<?= h(appUrl('/staff/resident-view.php?id=' . (int)$r['id'])) ?>"><?= h($r['first_name'] . ' ' . $r['last_name']) ?></a></td>
                     <td><?= h($r['email']) ?></td>
                     <td><?= h($r['contact_number']) ?></td>
                     <td><span class="badge <?= $r['status'] === 'active' ? 'badge-completed' : 'badge-cancelled' ?>"><?= h(ucfirst($r['status'])) ?></span></td>

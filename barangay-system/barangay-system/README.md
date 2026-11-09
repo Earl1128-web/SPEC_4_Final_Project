@@ -103,10 +103,11 @@ barangay-system/
    - By default it uses `DB_HOST = localhost`, `DB_USER = root`, `DB_PASS = ''`
      (the standard XAMPP defaults). Change these if your MySQL setup differs.
 6. **Place the project in htdocs**:
-   - Copy the entire `barangay-system` folder into `C:\xampp\htdocs\`
-     (on macOS/Linux: `/Applications/XAMPP/htdocs/` or `/opt/lampp/htdocs/`).
+  - Keep the project folder somewhere under `C:\xampp\htdocs\`
+    (on macOS/Linux: `/Applications/XAMPP/htdocs/` or `/opt/lampp/htdocs/`).
+    Application links automatically account for the folder's URL path.
 7. **Open the application**:
-   - Visit `http://localhost/barangay-system/` in your browser.
+  - For the supplied folder layout, visit `http://localhost/SPEC_4_Final_Project/barangay-system/`.
 
 ## Default Accounts (Sample Data)
 
@@ -121,6 +122,8 @@ All sample accounts use the password: **Password123!**
 | Resident  | maria.santos@example.com / msantos    | Password123! |
 
 You can register additional resident accounts from the **Register** page.
+If the database was imported before the demo password fix, import
+`database/fix_demo_passwords.sql` in phpMyAdmin to update the sample accounts.
 
 ## How the System Works
 
@@ -148,9 +151,8 @@ You can register additional resident accounts from the **Register** page.
 - **"Table doesn't exist" errors** — make sure you imported
   `database/barangay_reservation.sql` completely, and that `DB_NAME` in
   `config/database.php` matches (`barangay_reservation`).
-- **CSS/JS not loading** — make sure the project folder is named exactly
-  `barangay-system` inside `htdocs`, since the pages link to
-  `/barangay-system/css/style.css` etc.
+- **CSS/JS not loading** — confirm Apache is serving the project folder under
+  `htdocs` and that the browser URL matches its folder path.
 - **Can't log in with sample accounts** — double-check you're using
   `Password123!` exactly, and that the SQL import completed without errors.
 

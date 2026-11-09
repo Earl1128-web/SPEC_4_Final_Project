@@ -12,36 +12,36 @@ $pageTitle = $pageTitle ?? "Barangay Pahina's Online Reservation of Brgy. Certif
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= h($pageTitle) ?></title>
-<link rel="stylesheet" href="/barangay-system/css/style.css">
+<link rel="stylesheet" href="<?= h(appUrl('/css/style.css')) ?>">
 </head>
 <body>
 <header class="topbar">
     <div class="topbar-inner">
-        <a class="brand" href="/barangay-system/login.php">🏛️ Barangay Pahina's Online Reservation</a>
+        <a class="brand" href="<?= h(appUrl('/login.php')) ?>">🏛️ Barangay Pahina's Online Reservation</a>
         <nav class="main-nav">
             <?php if (isLoggedIn()): ?>
                 <?php if (currentRole() === 'resident'): ?>
-                    <a href="/barangay-system/resident/dashboard.php">Dashboard</a>
-                    <a href="/barangay-system/resident/reservation.php">Make Reservation</a>
-                    <a href="/barangay-system/resident/reservations.php">Reservations</a>
-                    <a href="/barangay-system/resident/certificates.php">Certificates</a>
-                    <a href="/barangay-system/resident/profile.php">Profile</a>
+                    <a href="<?= h(appUrl('/resident/dashboard.php')) ?>">Dashboard</a>
+                    <a href="<?= h(appUrl('/resident/reservation.php')) ?>">Make Reservation</a>
+                    <a href="<?= h(appUrl('/resident/reservations.php')) ?>">Reservations</a>
+                    <a href="<?= h(appUrl('/resident/certificates.php')) ?>">Certificates</a>
+                    <a href="<?= h(appUrl('/resident/profile.php')) ?>">Profile</a>
                 <?php elseif (currentRole() === 'staff'): ?>
-                    <a href="/barangay-system/staff/dashboard.php">Dashboard</a>
-                    <a href="/barangay-system/staff/reservations.php">Reservations</a>
-                    <a href="/barangay-system/staff/residents.php">Residents</a>
+                    <a href="<?= h(appUrl('/staff/dashboard.php')) ?>">Dashboard</a>
+                    <a href="<?= h(appUrl('/staff/reservations.php')) ?>">Reservations</a>
+                    <a href="<?= h(appUrl('/staff/residents.php')) ?>">Residents</a>
                 <?php elseif (currentRole() === 'admin'): ?>
-                    <a href="/barangay-system/admin/dashboard.php">Dashboard</a>
-                    <a href="/barangay-system/admin/residents.php">Residents</a>
-                    <a href="/barangay-system/admin/staff.php">Staff</a>
-                    <a href="/barangay-system/admin/appointments.php">Appointments</a>
-                    <a href="/barangay-system/admin/reservations.php">Reservations</a>
-                    <a href="/barangay-system/admin/audit-logs.php">Audit Logs</a>
+                    <a href="<?= h(appUrl('/admin/dashboard.php')) ?>">Dashboard</a>
+                    <a href="<?= h(appUrl('/admin/residents.php')) ?>">Residents</a>
+                    <a href="<?= h(appUrl('/admin/staff.php')) ?>">Staff</a>
+                    <a href="<?= h(appUrl('/admin/appointments.php')) ?>">Appointments</a>
+                    <a href="<?= h(appUrl('/admin/reservations.php')) ?>">Reservations</a>
+                    <a href="<?= h(appUrl('/admin/audit-logs.php')) ?>">Audit Logs</a>
                 <?php endif; ?>
                 <span class="nav-user">Hi, <?= h($_SESSION['display_name'] ?? 'User') ?></span>
-                <a href="/barangay-system/logout.php" class="btn-link">Logout</a>
+                <a href="<?= h(appUrl('/logout.php')) ?>" class="btn-link">Logout</a>
             <?php else: ?>
-                <a href="/barangay-system/login.php">Login</a>
+                <a href="<?= h(appUrl('/login.php')) ?>">Login</a>
             <?php endif; ?>
         </nav>
     </div>

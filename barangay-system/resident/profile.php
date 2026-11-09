@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ->execute([$email, $user['id']]);
 
         $_SESSION['flash_success'] = 'Profile updated successfully.';
-        header('Location: /barangay-system/resident/profile.php');
+        header('Location: ' . appUrl('/resident/profile.php'));
         exit;
     }
 }

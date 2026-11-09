@@ -27,11 +27,11 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="card">
     <h2>Manage</h2>
     <div class="btn-group">
-        <a class="btn btn-secondary" href="/barangay-system/admin/residents.php">Resident Management</a>
-        <a class="btn btn-secondary" href="/barangay-system/admin/staff.php">Staff Management</a>
-        <a class="btn btn-secondary" href="/barangay-system/admin/appointments.php">Appointment Management</a>
-        <a class="btn btn-secondary" href="/barangay-system/admin/reservations.php">Reservation Management</a>
-        <a class="btn btn-secondary" href="/barangay-system/admin/audit-logs.php">Audit Logs</a>
+        <a class="btn btn-secondary" href="<?= h(appUrl('/admin/residents.php')) ?>">Resident Management</a>
+        <a class="btn btn-secondary" href="<?= h(appUrl('/admin/staff.php')) ?>">Staff Management</a>
+        <a class="btn btn-secondary" href="<?= h(appUrl('/admin/appointments.php')) ?>">Appointment Management</a>
+        <a class="btn btn-secondary" href="<?= h(appUrl('/admin/reservations.php')) ?>">Reservation Management</a>
+        <a class="btn btn-secondary" href="<?= h(appUrl('/admin/audit-logs.php')) ?>">Audit Logs</a>
     </div>
 </div>
 

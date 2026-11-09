@@ -28,6 +28,18 @@ CREATE TABLE users (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- Table: login_attempts
+-- Stores hashed client addresses for temporary login throttling
+-- ---------------------------------------------------------------------
+CREATE TABLE login_attempts (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    ip_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+    attempted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_login_attempts_ip_time (ip_hash, attempted_at),
+    INDEX idx_login_attempts_time (attempted_at)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- Table: residents
 -- Extra profile information for accounts with role = 'resident'
 -- ---------------------------------------------------------------------
@@ -139,25 +151,25 @@ CREATE TABLE audit_logs (
 
 -- 1 Administrator
 INSERT INTO users (username, email, password, role, status) VALUES
-('admin', 'admin@barangay.gov.ph', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'active');
+('admin', 'admin@barangay.gov.ph', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'admin', 'active');
 INSERT INTO staff (user_id, first_name, last_name, position) VALUES
 (1, 'Ana', 'Villareal', 'Barangay Administrator');
 
 -- 2 Barangay Staff accounts
 INSERT INTO users (username, email, password, role, status) VALUES
-('staff1', 'staff1@barangay.gov.ph', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'staff', 'active'),
-('staff2', 'staff2@barangay.gov.ph', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'staff', 'active');
+('staff1', 'staff1@barangay.gov.ph', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'staff', 'active'),
+('staff2', 'staff2@barangay.gov.ph', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'staff', 'active');
 INSERT INTO staff (user_id, first_name, last_name, position) VALUES
 (2, 'Mark', 'Torres', 'Barangay Clerk'),
 (3, 'Liza', 'Fernandez', 'Barangay Secretary');
 
 -- 5 Resident accounts
 INSERT INTO users (username, email, password, role, status) VALUES
-('jdelacruz', 'juan.delacruz@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', 'active'),
-('msantos', 'maria.santos@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', 'active'),
-('preyes', 'pedro.reyes@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', 'active'),
-('agarcia', 'ana.garcia@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', 'active'),
-('rlim', 'rico.lim@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'resident', 'active');
+('jdelacruz', 'juan.delacruz@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active'),
+('msantos', 'maria.santos@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active'),
+('preyes', 'pedro.reyes@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active'),
+('agarcia', 'ana.garcia@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active'),
+('rlim', 'rico.lim@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active');
 
 INSERT INTO residents (user_id, first_name, middle_name, last_name, date_of_birth, address, contact_number) VALUES
 (4, 'Juan', 'Reyes', 'Dela Cruz', '2000-01-01', '123 Mabini St, Barangay Example', '09171234567'),

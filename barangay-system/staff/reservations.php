@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['res
         logAction($pdo, $_SESSION['user_id'], strtoupper($action) . '_RESERVATION', "Reservation #$id set to $newStatus");
         $_SESSION['flash_success'] = "Reservation marked as $newStatus.";
     }
-    header('Location: /barangay-system/staff/reservations.php');
+    header('Location: ' . appUrl('/staff/reservations.php'));
     exit;
 }
 
@@ -122,7 +122,7 @@ require_once __DIR__ . '/../includes/header.php';
                                     data-confirm="Reject this reservation?">Reject</button>
                             </form>
                         <?php elseif ($r['status'] === 'Confirmed'): ?>
-                            <a class="btn btn-sm" href="/barangay-system/staff/issue-certificate.php?reservation_id=<?= (int)$r['id'] ?>">Issue Certificate</a>
+                            <a class="btn btn-sm" href="<?= h(appUrl('/staff/issue-certificate.php?reservation_id=' . (int)$r['id'])) ?>">Issue Certificate</a>
                             <form method="post"><?= csrfField() ?>
                                 <input type="hidden" name="reservation_id" value="<?= (int)$r['id'] ?>">
                                 <input type="hidden" name="action" value="noshow">

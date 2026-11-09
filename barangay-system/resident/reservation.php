@@ -44,11 +44,11 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="alert alert-error">
         You already have an active reservation. Please wait until it is completed or cancel it before booking another.
     </div>
-    <a class="btn btn-secondary" href="/barangay-system/resident/reservations.php">View My Reservations</a>
+    <a class="btn btn-secondary" href="<?= h(appUrl('/resident/reservations.php')) ?>">View My Reservations</a>
 <?php else: ?>
 
 <div class="card">
-    <form method="post" action="/barangay-system/resident/reserve.php" id="reservationForm">
+    <form method="post" action="<?= h(appUrl('/resident/reserve.php')) ?>" id="reservationForm">
         <?= csrfField() ?>
 
         <div class="form-group">

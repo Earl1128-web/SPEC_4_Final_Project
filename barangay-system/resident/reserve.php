@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/functions.php';
 requireRole(['resident']);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /barangay-system/resident/reservation.php');
+    header('Location: ' . appUrl('/resident/reservation.php'));
     exit;
 }
 verifyCsrf();
@@ -24,12 +24,12 @@ if ($purpose === 'Other') {
 // --- Server-side validation (never trust the client) ---
 if ($purpose === '') {
     $_SESSION['flash_error'] = 'Please select the purpose of your certificate.';
-    header('Location: /barangay-system/resident/reservation.php');
+    header('Location: ' . appUrl('/resident/reservation.php'));
     exit;
 }
 if ($slotId <= 0) {
     $_SESSION['flash_error'] = 'Please select an appointment date.';
-    header('Location: /barangay-system/resident/reservation.php');
+    header('Location: ' . appUrl('/resident/reservation.php'));
     exit;
 }
 
@@ -40,7 +40,7 @@ $stmt = $pdo->prepare(
 $stmt->execute([$resident['id']]);
 if ((int)$stmt->fetchColumn() > 0) {
     $_SESSION['flash_error'] = 'You already have an active reservation.';
-    header('Location: /barangay-system/resident/reservation.php');
+    header('Location: ' . appUrl('/resident/reservation.php'));
     exit;
 }
 
@@ -56,7 +56,7 @@ try {
     if (!$slot || strtotime($slot['appointment_date']) < strtotime(date('Y-m-d'))) {
         $pdo->rollBack();
         $_SESSION['flash_error'] = 'This appointment slot is no longer available.';
-        header('Location: /barangay-system/resident/reservation.php');
+        header('Location: ' . appUrl('/resident/reservation.php'));
         exit;
     }
 
@@ -71,7 +71,7 @@ try {
     if ($takenCount >= $slot['max_reservations']) {
         $pdo->rollBack();
         $_SESSION['flash_error'] = 'This appointment slot is already full.';
-        header('Location: /barangay-system/resident/reservation.php');
+        header('Location: ' . appUrl('/resident/reservation.php'));
         exit;
     }
 
@@ -90,12 +90,12 @@ try {
 
     $pdo->commit();
 
-    header('Location: /barangay-system/resident/reservation-success.php?id=' . $reservationId);
+    header('Location: ' . appUrl('/resident/reservation-success.php?id=' . $reservationId));
     exit;
 } catch (Exception $e) {
     $pdo->rollBack();
     error_log('Reservation failed: ' . $e->getMessage());
     $_SESSION['flash_error'] = 'Something went wrong while saving your reservation. Please try again.';
-    header('Location: /barangay-system/resident/reservation.php');
+    header('Location: ' . appUrl('/resident/reservation.php'));
     exit;
 }

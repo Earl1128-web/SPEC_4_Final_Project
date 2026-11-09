@@ -69,7 +69,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <td><?= h($r['first_name'] . ' ' . $r['last_name']) ?></td>
                     <td><?= formatTime($r['appointment_time']) ?></td>
                     <td><?= statusBadge($r['status']) ?></td>
-                    <td><a href="/barangay-system/staff/reservations.php?search=<?= urlencode($r['reference_number']) ?>">View</a></td>
+                    <td><a href="<?= h(appUrl('/staff/reservations.php?search=' . urlencode($r['reference_number']))) ?>">View</a></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

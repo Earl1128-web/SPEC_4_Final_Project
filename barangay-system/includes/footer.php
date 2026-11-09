@@ -9,6 +9,6 @@
 <footer class="site-footer">
     <p>&copy; <?= date('Y') ?> Barangay Pahina's Online Reservation of Brgy. Certificate. All rights reserved.</p>
 </footer>
-<script src="/barangay-system/js/script.js"></script>
+<script src="<?= h(appUrl('/js/script.js')) ?>"></script>
 </body>
 </html>

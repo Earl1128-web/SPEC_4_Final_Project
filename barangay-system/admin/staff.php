@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_staff'])) {
             $pdo->commit();
 
             $_SESSION['flash_success'] = 'Staff account created successfully.';
-            header('Location: /barangay-system/admin/staff.php');
+            header('Location: ' . appUrl('/admin/staff.php'));
             exit;
         } catch (Exception $e) {
             $pdo->rollBack();
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_user_id'])) {
         logAction($pdo, $_SESSION['user_id'], 'TOGGLE_STAFF_STATUS', "Staff user #$userId set to $newStatus");
         $_SESSION['flash_success'] = "Staff account status updated to $newStatus.";
     }
-    header('Location: /barangay-system/admin/staff.php');
+    header('Location: ' . appUrl('/admin/staff.php'));
     exit;
 }
 
