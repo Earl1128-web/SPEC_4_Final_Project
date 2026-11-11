@@ -151,25 +151,25 @@ CREATE TABLE audit_logs (
 
 -- 1 Administrator
 INSERT INTO users (username, email, password, role, status) VALUES
-('admin', 'admin@barangay.gov.ph', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'admin', 'active');
+('admin', 'admin@barangay.gov.ph', '$2y$10$OladPIw55hoGrv1E.wVYOO5sqfNDUyFJaCpHpw5RhUBq2FtIPcdgu', 'admin', 'active');
 INSERT INTO staff (user_id, first_name, last_name, position) VALUES
 (1, 'Ana', 'Villareal', 'Barangay Administrator');
 
 -- 2 Barangay Staff accounts
 INSERT INTO users (username, email, password, role, status) VALUES
-('staff1', 'staff1@barangay.gov.ph', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'staff', 'active'),
-('staff2', 'staff2@barangay.gov.ph', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'staff', 'active');
+('staff1', 'staff1@barangay.gov.ph', '$2y$10$RwSn4hiBowQUe//d.S2lSexldMnBUbn2Dy8g6HJUimv5xh58ewnA2', 'staff', 'active'),
+('staff2', 'staff2@barangay.gov.ph', '$2y$10$sdmgagxeR5ReGjlPUzmxT.ygLa3H9vKu0kQQfYkmMVudcBAGDb6b.', 'staff', 'active');
 INSERT INTO staff (user_id, first_name, last_name, position) VALUES
 (2, 'Mark', 'Torres', 'Barangay Clerk'),
 (3, 'Liza', 'Fernandez', 'Barangay Secretary');
 
 -- 5 Resident accounts
 INSERT INTO users (username, email, password, role, status) VALUES
-('jdelacruz', 'juan.delacruz@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active'),
-('msantos', 'maria.santos@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active'),
-('preyes', 'pedro.reyes@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active'),
-('agarcia', 'ana.garcia@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active'),
-('rlim', 'rico.lim@example.com', '$2y$10$WC84TIErR4UnwMv2CVS4ceUz8OTpa4WVLtNLJulCbofbkAyReLpzO', 'resident', 'active');
+('jdelacruz', 'juan.delacruz@example.com', '$2y$10$FP/aHhNd.rFgQomXZnto1OKk.rc6A2YM2N4oxFcnSZ3cFvw4M6f6a', 'resident', 'active'),
+('msantos', 'maria.santos@example.com', '$2y$10$qv84jlKF3PHWXfg4zEJBFutmdOLovWJD82N6SXskMFFmo9AQi/HMu', 'resident', 'active'),
+('preyes', 'pedro.reyes@example.com', '$2y$10$IUubcRqNTXPQ6umm147Tcug302Zdl5sqTIpEHOvjCs9ZvBGq4Xhdi', 'resident', 'active'),
+('agarcia', 'ana.garcia@example.com', '$2y$10$hgldXXCWR8mM6qZXWN904e7QgOLIa4hgYvhVxz4r82IyKeEjpBWCy', 'resident', 'active'),
+('rlim', 'rico.lim@example.com', '$2y$10$O7RnF9/gqF1YGG9mVsZ99.QT7ldqt4wNC7ErH3KyPk0QQB4S7RzI6', 'resident', 'active');
 
 INSERT INTO residents (user_id, first_name, middle_name, last_name, date_of_birth, address, contact_number) VALUES
 (4, 'Juan', 'Reyes', 'Dela Cruz', '2000-01-01', '123 Mabini St, Barangay Example', '09171234567'),

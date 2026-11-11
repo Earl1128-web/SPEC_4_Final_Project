@@ -1,6 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', '0');
 error_reporting(E_ALL);
 /**
  * login.php — Public landing page & unified authentication portal.
@@ -274,16 +273,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="bp-logo-divider" aria-hidden="true"></div>
 
-                <div class="bp-logo-box" title="Place City Logo at assets/images/city-logo.png">
+                <div class="bp-logo-box" title="Official Seal of the City of Cebu">
                     <img
-                        src="<?= h(appUrl('/assets/images/city-logo.png')) ?>"
-                        alt="City / Municipality Logo"
+                        src="<?= h(dirname(appBasePath()) . '/logo/cityLogo.png') ?>"
+                        alt="Official Seal of the City of Cebu"
                         class="bp-logo-img"
                         onerror="this.classList.add('is-hidden');"
                     >
                     <div class="bp-logo-fallback">
                         <span class="bp-logo-icon" aria-hidden="true">🏙️</span>
-                        <span class="bp-logo-tag">CITY<br>LOGO</span>
+                        <span class="bp-logo-tag">CITY OF<br>CEBU</span>
                     </div>
                 </div>
             </div>

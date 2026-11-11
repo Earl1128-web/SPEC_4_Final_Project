@@ -40,6 +40,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+if (isset($_SESSION['last_activity']) && time() - $_SESSION['last_activity'] > 1800) {
+    $_SESSION = [];
+    session_regenerate_id(true);
+}
+$_SESSION['last_activity'] = time();
+
 /**
  * Returns true if a user is currently logged in.
  */
