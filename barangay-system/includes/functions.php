@@ -124,3 +124,53 @@ function getLastCertificateDate(PDO $pdo, int $residentId): ?string
     $val = $stmt->fetchColumn();
     return $val ?: null;
 }
+
+/**
+ * Generates the next walk-in reference number in the format
+ * WALK-YYYY-0001 based on the highest existing number for the year.
+ */
+function generateWalkinReference(PDO $pdo): string
+{
+    $year = date('Y');
+    $stmt = $pdo->prepare(
+        "SELECT reference_number FROM walkin_transactions
+         WHERE reference_number LIKE ?
+         ORDER BY id DESC LIMIT 1"
+    );
+    $stmt->execute(["WALK-$year-%"]);
+    $last = $stmt->fetchColumn();
+
+    $nextNumber = 1;
+    if ($last) {
+        $parts = explode('-', $last);
+        $nextNumber = (int)end($parts) + 1;
+    }
+    return sprintf('WALK-%s-%04d', $year, $nextNumber);
+}
+
+/** Returns a small colored badge for walk-in transaction statuses. */
+function walkinStatusBadge(string $status): string
+{
+    $map = [
+        'Pending'    => 'badge-pending',
+        'Processing' => 'badge-confirmed',
+        'Completed'  => 'badge-completed',
+        'Released'   => 'badge-released',
+        'Cancelled'  => 'badge-cancelled',
+    ];
+    $class = $map[$status] ?? 'badge-pending';
+    return '<span class="badge ' . $class . '">' . h($status) . '</span>';
+}
+
+/** Returns a small badge for payment status. */
+function paymentStatusBadge(string $status): string
+{
+    $map = [
+        'Free'   => 'badge-free',
+        'Paid'   => 'badge-paid',
+        'Unpaid' => 'badge-unpaid',
+        'Waived' => 'badge-waived',
+    ];
+    $class = $map[$status] ?? 'badge-free';
+    return '<span class="badge ' . $class . '">' . h($status) . '</span>';
+}
